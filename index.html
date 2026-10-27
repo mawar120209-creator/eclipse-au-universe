@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#100b19">
+<title>ECLIPSE AU — Interactive Story Universe</title>
+
+<style>
+:root {
+  --bg: #100b19;
+  --panel: #1b1427;
+  --panel2: #251b35;
+  --purple: #a78bfa;
+  --pink: #f0abfc;
+  --text: #f5efff;
+  --muted: #b9abc9;
+  --border: #453356;
+  --danger: #ff8eaa;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, sans-serif;
+  line-height: 1.6;
+}
+
+button, input, textarea, select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+header {
+  padding: 22px 16px;
+  text-align: center;
+  border-bottom: 1px solid var(--border);
+  background: #140e20;
+}
+
+.logo {
+  font-size: 26px;
+  font-weight: 900;
+  letter-spacing: 4px;
+  color: var(--pink);
+}
+
+.subtitle {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+nav {
+  display: flex;
+  gap: 8px;
+  padding: 12px;
+  overflow-x: auto;
+  position: sticky;
+  top: 0;
+  background: #100b19;
+  z-index: 10;
+  border-bottom: 1px solid var(--border);
+}
+
+nav button {
+  flex-shrink: 0;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 8px 14px;
+  color: var(--text);
+  background: var(--panel);
+}
+
+nav button.active,
+.primary {
+  background: var(--purple);
+  color: #170e23;
+  border-color: var(--purple);
+  font-weight: 700;
+}
+
+main {
+  width: min(900px, 100%);
+  margin: auto;
+  padding: 18px 14px 60px;
+}
+
+.page {
+  display: none;
+}
+
+.page.active {
+  display: block;
+}
+
+.card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 18px;
+  margin-bottom: 16px;
+}
+
+h1, h2, h3 {
+  line-height: 1.3;
+}
+
+h1 {
+  font-size: 28px;
+}
+
+h2 {
+  font-size: 21px;
+}
+
+p {
+  color: var(--muted);
+}
+
+label {
+  display: block;
+  margin: 14px 0 6px;
+  font-weight: 600;
+}
+
+input, textarea, select {
+  width: 100%;
+  color: var(--text);
+  background: #110c1a;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px;
+}
+
+textarea {
+  min-height: 110px;
+  resize: vertical;
+}
+
+button {
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  padding: 10px 14px;
+  color: var(--text);
+  background: var(--panel2);
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 14px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+.item {
+  background: var(--panel2);
+  padding: 14px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  overflow-wrap: anywhere;
+}
+
+.item h3 {
+  margin-top: 0;
+}
+
+.cover {
+  width: 100%;
+  max-height: 280px;
+  object-fit: cover;
+  border-radius: 12px;
+  margin-top: 10px;
+}
+
+.muted {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.badge {
+  display: inline-block;
+  background: #39284f;
+  color: var(--pink);
+  border-radius: 20px;
+  padding: 4px 10px;
+  font-size: 12px;
+}
+
+.chat {
+  max-width: 540px;
+  margin: auto;
+  background: #e9e0d6;
+  color: #211d25;
+  border-radius: 16px;
+  padding: 12px;
+}
+
+.chat-header {
+  background: #453c52;
+  color: white;
+  padding: 12px;
+  border-radius: 10px;
+}
+
+.bubble {
+  width: fit-content;
+  max-width: 85%;
+  padding: 9px 12px;
+  border-radius: 12px;
+  margin: 10px 0;
+  overflow-wrap: anywhere;
+}
+
+.bubble.left {
+  background: white;
+}
+
+.bubble.right {
+  background: #d7f8c6;
+  margin-left: auto;
+}
+
+.chat small {
+  display: block;
+  opacity: .65;
+  font-size: 10px;
+  margin-top: 3px;
+}
+
+.story-text {
+  white-space: pre-wrap;
+  line-height: 1.9;
+  color: var(--text);
+}
+
+.choice-button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  margin-top: 10px;
+}
+
+footer {
+  text-align: center;
+  color: var(--muted);
+  padding: 24px;
+  border-top: 1px solid var(--border);
+}
+
+.empty {
+  padding: 22px;
+  text-align: center;
+  color: var(--muted);
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid var(--border);
+  margin: 20px 0;
+}
+
+@media (min-width: 700px) {
+  main {
+    padding-top: 28px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">ECLIPSE AU</div>
+  <div class="subtitle">INTERACTIVE STORY UNIVERSE</div>
+  <p>Buat duniamu. Ciptakan ceritamu. Tentukan akhir ceritamu.</p>
+  <span class="badge">Manual Storytelling · No AI</span>
+</header>
+
+<nav id="navigation">
+  <button class="active" data-page="home">🏠 Beranda</button>
+  <button data-page="creator">🌙 Buat AU</button>
+  <button data-page="characters">👤 Karakter</button>
+  <button data-page="novel">📖 Novel</button>
+  <button data-page="chat">💬 Chat Story</button>
+  <button data-page="media">🖼️ Media</button>
+  <button data-page="reader">📚 Reader</button>
+  <button data-page="library">💾 Library</button>
+</nav>
+
+<main>
+
+<!-- BERANDA -->
+<section id="home" class="page active">
+  <div class="card">
+    <span class="badge">WELCOME TO YOUR UNIVERSE</span>
+    <h1>Ceritamu, duniamu.</h1>
+    <p>
+      ECLIPSE AU adalah ruang untuk membuat Alternate Universe
+      secara manual. Tulis novel, buat percakapan fiktif,
+      ciptakan karakter, dan tentukan jalan cerita sendiri.
+    </p>
+    <div class="actions">
+      <button class="primary" onclick="showPage('creator')">
+        ✨ Buat AU Baru
+      </button>
+      <button onclick="showPage('library')">
+        Buka Library
+      </button>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <h3>📖 Novel Studio</h3>
+      <p>Tulis narasi, dialog, dan bab novel.</p>
+      <button onclick="showPage('novel')">Mulai Menulis</button>
+    </div>
+    <div class="card">
+      <h3>💬 Chat Story</h3>
+      <p>Buat percakapan WhatsApp fiktif.</p>
+      <button onclick="showPage('chat')">Buat Percakapan</button>
+    </div>
+    <div class="card">
+      <h3>👤 Character Creator</h3>
+      <p>Buat profil karakter sesuai imajinasimu.</p>
+      <button onclick="showPage('characters')">Buat Karakter</button>
+    </div>
+    <div class="card">
+      <h3>🖼️ Media Studio</h3>
+      <p>Tambahkan gambar, video, dan audio.</p>
+      <button onclick="showPage('media')">Buka Media Studio</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>📊 Statistik Universe</h2>
+    <div id="stats"></div>
+  </div>
+</section>
+
+<!-- PEMBUAT AU -->
+<section id="creator" class="page">
+  <div class="card">
+    <h1>🌙 AU Creator</h1>
+    <p>Buat dunia cerita baru dengan mengisi informasi berikut.</p>
+
+    <form id="auForm">
+      <label>Judul AU</label>
+      <input name="title" required placeholder="Contoh: Moonlight Academy">
+
+      <label>Genre</label>
+      <select name="genre">
+        <option>Romance</option>
+        <option>Fantasy</option>
+        <option>Slice of Life</option>
+        <option>Drama</option>
+        <option>Horror</option>
+        <option>Mystery</option>
+        <option>Action</option>
+        <option>Apocalypse</option>
+        <option>Historical</option>
+        <option>Campuran</option>
+      </select>
+
+      <label>Nama penulis</label>
+      <input name="author" placeholder="Nama pena">
+
+      <label>Sinopsis</label>
+      <textarea name="synopsis" placeholder="Ceritakan gambaran dunia AU-mu..."></textarea>
+
+      <label>Catatan dunia cerita</label>
+      <textarea name="world" placeholder="Latar tempat, waktu, aturan dunia..."></textarea>
+
+      <label>Gambar sampul (opsional)</label>
+      <input name="cover" type="file" accept="image/*">
+
+      <button class="primary" type="submit">Simpan AU</button>
+    </form>
+  </div>
+</section>
+
+<!-- KARAKTER -->
+<section id="characters" class="page">
+  <div class="card">
+    <h1>👤 Character Creator</h1>
+
+    <form id="characterForm">
+      <label>Nama karakter</label>
+      <input name="name" required placeholder="Nama karakter">
+
+      <label>Usia</label>
+      <input name="age" placeholder="Contoh: 24 tahun">
+
+      <label>Gender</label>
+      <select name="gender">
+        <option>Perempuan</option>
+        <option>Laki-laki</option>
+        <option>Lainnya</option>
+      </select>
+
+      <label>MBTI (opsional)</label>
+      <select name="mbti">
+        <option>Tidak ditentukan</option>
+        <option>INTJ</option><option>INTP</option>
+        <option>ENTJ</option><option>ENTP</option>
+        <option>INFJ</option><option>INFP</option>
+        <option>ENFJ</option><option>ENFP</option>
+        <option>ISTJ</option><option>ISFJ</option>
+        <option>ESTJ</option><option>ESFJ</option>
+        <option>ISTP</option><option>ISFP</option>
+        <option>ESTP</option><option>ESFP</option>
+      </select>
+
+      <label>Kepribadian</label>
+      <textarea name="personality" placeholder="Sifat, kebiasaan, cara bicara..."></textarea>
+
+      <label>Latar belakang</label>
+      <textarea name="background" placeholder="Keluarga, masa lalu, rahasia..."></textarea>
+
+      <label>Foto karakter (opsional)</label>
+      <input name="photo" type="file" accept="image/*">
+
+      <button class="primary" type="submit">Simpan Karakter</button>
+    </form>
+  </div>
+
+  <div class="card">
+    <h2>Daftar Karakter</h2>
+    <div id="characterList"></div>
+  </div>
+</section>
+
+<!-- NOVEL -->
+<section id="novel" class="page">
+  <div class="card">
+    <h1>📖 Novel Studio</h1>
+    <p>Tulis bab novelmu. Narasi dan dialog bisa kamu atur sendiri.</p>
+
+    <form id="chapterForm">
+      <label>Judul bab</label>
+      <input name="title" required placeholder="Bab 1 — Pertemuan">
+
+      <label>Isi bab</label>
+      <textarea name="content" required style="min-height:260px"
+        placeholder="Tuliskan narasi dan dialog di sini..."></textarea>
+
+      <button class="primary" type="submit">Simpan Bab</button>
+    </form>
+  </div>
+
+  <div class="card">
+    <h2>Daftar Bab</h2>
+    <div id="chapterList"></div>
+  </div>
+</section>
+
+<!-- CHAT STORY -->
+<section id="chat" class="page">
+  <div class="card">
+    <h1>💬 Chat Story Maker</h1>
+    <p>Buat percakapan fiktif secara manual.</p>
+
+    <form id="chatForm">
+      <label>Nama kontak</label>
+      <input name="contact" required placeholder="Contoh: Nathan">
+
+      <label>Nama pengirim pesan</label>
+      <input name="sender" required placeholder="Contoh: Alya">
+
+      <label>Pesan</label>
+      <textarea name="message" required placeholder="Tulis pesan..."></textarea>
+
+      <label>Pengirim pesan ini</label>
+      <select name="side">
+        <option value="right">Aku</option>
+        <option value="left">Kontak</option>
+      </select>
+
+      <label>Waktu pesan</label>
+      <input name="time" type="time">
+
+      <button class="primary" type="submit">Tambahkan Pesan</button>
+    </form>
+  </div>
+
+  <div class="card">
+    <h2>Pratinjau Percakapan</h2>
+    <div class="chat">
+      <div class="chat-header" id="chatTitle">Percakapan Fiktif</div>
+      <div id="chatMessages"></div>
+    </div>
+    <div class="actions">
+      <button onclick="clearChat()">Hapus Percakapan</button>
+      <button onclick="downloadChat()">Ekspor Percakapan (.txt)</button>
+    </div>
+  </div>
+</section>
+
+<!-- MEDIA -->
+<section id="media" class="page">
+  <div class="card">
+    <h1>🖼️ Media Studio</h1>
+    <p>
+      Pilih gambar, audio, atau video dari perangkatmu.
+      Media akan disimpan secara lokal di browser jika kapasitas
+      penyimpanan mencukupi.
+    </p>
+
+    <label>Nama media</label>
+    <input id="mediaName" placeholder="Contoh: Foto sekolah">
+
+    <label>Pilih gambar, audio, atau video</label>
+    <input id="mediaFile" type="file" accept="image/*,audio/*,video/*">
+
+    <div class="actions">
+      <button class="primary" onclick="saveMedia()">Simpan Media</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Koleksi Media</h2>
+    <div id="mediaList"></div>
+  </div>
+</section>
+
+<!-- READER -->
+<section id="reader" class="page">
+  <div class="card">
+    <h1>📚 Reader Mode</h1>
+    <p>Pilih AU untuk melihat sinopsis dan membaca babnya.</p>
+
+    <label>Pilih AU</label>
+    <select id="readerAU" onchange="renderReader()"></select>
+
+    <div id="readerContent"></div>
+  </div>
+</section>
+
+<!-- LIBRARY -->
+<section id="library" class="page">
+  <div class="card">
+    <h1>💾 My Library</h1>
+    <p>Semua proyek tersimpan di browser ini.</p>
+    <div id="libraryList"></div>
+  </div>
+
+  <div class="card">
+    <h2>Cadangkan Proyek</h2>
+    <p>Ekspor data proyek ke file JSON agar bisa dicadangkan.</p>
+    <div class="actions">
+      <button class="primary" onclick="exportProject()">Ekspor Proyek</button>
+    </div>
+
+    <hr>
+
+    <label>Impor proyek JSON</label>
+    <input type="file" id="importFile" accept=".json,application/json">
+
+    <div class="actions">
+      <button onclick="importProject()">Impor Proyek</button>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="logo">ECLIPSE AU</div>
+  <p>Where every universe has a story.</p>
+  <p>Fan-created stories · Manual authoring · No AI</p>
+</footer>
+
+<script>
+const DB_KEY = "eclipse_au_universe_v1";
+
+const emptyDB = () => ({
+  aus: [],
+  characters: [],
+  chapters: [],
+  chats: [],
+  media: []
+});
+
+let db = loadDB();
+
+function loadDB() {
+  try {
+    const data = JSON.parse(localStorage.getItem(DB_KEY));
+    if (data && typeof data === "object") {
+      return { ...emptyDB(), ...data };
+    }
+  } catch (e) {}
+  return emptyDB();
+}
+
+function persist() {
+  try {
+    localStorage.setItem(DB_KEY, JSON.stringify(db));
+    updateViews();
+    return true;
+  } catch (e) {
+    alert("Penyimpanan browser penuh atau tidak tersedia. Coba hapus media besar atau ekspor proyek terlebih dahulu.");
+    return false;
+  }
+}
+
+function id() {
+  return Date.now().toString(36) +
+    Math.random().toString(36).slice(2, 8);
+}
+
+function esc(value) {
+  return String(value ?? "").replace(/[&<>"']/g, char => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;"
+  })[char]);
+}
+
+function showPage(name) {
+  document.querySelectorAll(".page").forEach(page => {
+    page.classList.toggle("active", page.id === name);
+  });
+
+  document.querySelectorAll("nav button").forEach(button => {
+    button.classList.toggle("active", button.dataset.page === name);
+  });
+
+  updateViews();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+document.querySelectorAll("nav button").forEach(button => {
+  button.addEventListener("click", () => showPage(button.dataset.page));
+});
+
+function fileAsDataURL(file) {
+  return new Promise((resolve, reject) => {
+    if (!file || !file.size) {
+      resolve("");
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+document.getElementById("auForm").addEventListener("submit", async event => {
+  event.preventDefault();
+
+  const form = event.currentTarget;
+  const data = new FormData(form);
+
+  let cover = "";
+  try {
+    cover = await fileAsDataURL(data.get("cover"));
+  } catch (e) {
+    alert("Gambar tidak dapat dibaca.");
+    return;
+  }
+
+  db.aus.push({
+    id: id(),
+    title: data.get("title"),
+    genre: data.get("genre"),
+    author: data.get("author"),
+    synopsis: data.get("synopsis"),
+    world: data.get("world"),
+    cover,
+    created: new Date().toISOString()
+  });
+
+  if (persist()) {
+    form.reset();
+    alert("AU berhasil disimpan!");
+    showPage("library");
+  }
+});
+
+document.getElementById("characterForm").addEventListener("submit", async event => {
+  event.preventDefault();
+
+  const form = event.currentTarget;
+  const data = new FormData(form);
+
+  let photo = "";
+  try {
+    photo = await fileAsDataURL(data.get("photo"));
+  } catch (e) {
+    alert("Foto tidak dapat dibaca.");
+    return;
+  }
+
+  db.characters.push({
+    id: id(),
+    name: data.get("name"),
+    age: data.get("age"),
+    gender: data.get("gender"),
+    mbti: data.get("mbti"),
+    personality: data.get("personality"),
+    background: data.get("background"),
+    photo,
+    created: new Date().toISOString()
+  });
+
+  if (persist()) {
+    form.reset();
+    alert("Karakter berhasil disimpan!");
+  }
+});
+
+document.getElementById("chapterForm").addEventListener("submit", event => {
+  event.preventDefault();
+
+  const form = event.currentTarget;
+  const data = new FormData(form);
+
+  db.chapters.push({
+    id: id(),
+    title: data.get("title"),
+    content: data.get("content"),
+    created: new Date().toISOString()
+  });
+
+  if (persist()) {
+    form.reset();
+    alert("Bab berhasil disimpan!");
+  }
+});
+
+document.getElementById("chatForm").addEventListener("submit", event => {
+  event.preventDefault();
+
+  const data = new FormData(event.currentTarget);
+
+  db.chats.push({
+    id: id(),
+    contact: data.get("contact"),
+    sender: data.get("sender"),
+    message: data.get("message"),
+    side: data.get("side"),
+    time: data.get("time") || new Date().toLocaleTimeString("id-ID", {
+      hour: "2-digit",
+      minute: "2-digit"
+    }),
+    created: new Date().toISOString()
+  });
+
+  if (persist()) {
+    event.currentTarget.reset();
+  }
+});
+
+function clearChat() {
+  if (!confirm("Hapus semua pesan percakapan?")) return;
+  db.chats = [];
+  persist();
+}
+
+function downloadFile(filename, content, type) {
+  const blob = new Blob([content], { type });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+function downloadChat() {
+  const textContent = db.chats.map(message =>
+    `[${message.time}] ${message.sender}: ${message.message}`
+  ).join("\n");
+
+  downloadFile("eclipse-au-chat.txt", textContent, "text/plain;charset=utf-8");
+}
+
+async function saveMedia() {
+  const input = document.getElementById("mediaFile");
+  const file = input.files[0];
+
+  if (!file) {
+    alert("Pilih file media terlebih dahulu.");
+    return;
+  }
+
+  if (file.size > 2 * 1024 * 1024) {
+    alert("Untuk versi awal ini, pilih file maksimal 2 MB agar penyimpanan browser tidak cepat penuh.");
+    return;
+  }
+
+  try {
+    const src = await fileAsDataURL(file);
+
+    db.media.push({
+      id: id(),
+      name: document.getElementById("mediaName").value || file.name,
+      filename: file.name,
+      type: file.type,
+      src
+    });
+
+    if (persist()) {
+      input.value = "";
+      document.getElementById("mediaName").value = "";
+      alert("Media berhasil disimpan.");
+    }
+  } catch (e) {
+    alert("Media gagal disimpan.");
+  }
+}
+
+function deleteItem(collection, itemId) {
+  if (!confirm("Yakin ingin menghapus item ini?")) return;
+  db[collection] = db[collection].filter(item => item.id !== itemId);
+  persist();
+}
+
+function updateViews() {
+  renderStats();
+  renderCharacters();
+  renderChapters();
+  renderChats();
+  renderMedia();
+  renderReader();
+  renderLibrary();
+}
+
+function renderStats() {
+  document.getElementById("stats").innerHTML = `
+    <div class="grid">
+      <div class="item">🌙 AU <h2>${db.aus.length}</h2></div>
+      <div class="item">👤 Karakter <h2>${db.characters.length}</h2></div>
+      <div class="item">📖 Bab <h2>${db.chapters.length}</h2></div>
+      <div class="item">💬 Pesan <h2>${db.chats.length}</h2></div>
+    </div>
+  `;
+}
+
+function renderCharacters() {
+  const el = document.getElementById("characterList");
+
+  if (!db.characters.length) {
+    el.innerHTML = '<div class="empty">Belum ada karakter.</div>';
+    return;
+  }
+
+  el.innerHTML = db.characters.map(c => `
+    <div class="item" style="margin-bottom:10px">
+      ${c.photo ? `<img class="cover" src="${c.photo}" alt="Foto karakter">` : ""}
+      <h3>${esc(c.name)}</h3>
+      <span class="badge">${esc(c.mbti)}</span>
+      <p>Usia: ${esc(c.age || "-")} · ${esc(c.gender)}</p>
+      <p>${esc(c.personality)}</p>
+      <p>${esc(c.background)}</p>
+      <button onclick="deleteItem('characters','${c.id}')">Hapus</button>
+    </div>
+  `).join("");
+}
+
+function renderChapters() {
+  const el = document.getElementById("chapterList");
+
+  if (!db.chapters.length) {
+    el.innerHTML = '<div class="empty">Belum ada bab novel.</div>';
+    return;
+  }
+
+  el.innerHTML = db.chapters.map((c, index) => `
+    <div class="item" style="margin-bottom:10px">
+      <h3>Bab ${index + 1}: ${esc(c.title)}</h3>
+      <div class="story-text">${esc(c.content)}</div>
+      <div class="actions">
+        <button onclick="readChapter('${c.id}')">Baca Bab</button>
+        <button onclick="deleteItem('chapters','${c.id}')">Hapus</button>
+      </div>
+    </div>
+  `).join("");
+}
+
+function readChapter(chapterId) {
+  const chapter = db.chapters.find(c => c.id === chapterId);
+  if (!chapter) return;
+
+  document.getElementById("readerContent").innerHTML = `
+    <hr>
+    <h2>${esc(chapter.title)}</h2>
+    <div class="story-text">${esc(chapter.content)}</div>
+  `;
+
+  showPage("reader");
+}
+
+function renderChats() {
+  document.getElementById("chatTitle").textContent =
+    db.chats.length ? db.chats[db.chats.length - 1].contact : "Percakapan Fiktif";
+
+  const el = document.getElementById("chatMessages");
+
+  if (!db.chats.length) {
+    el.innerHTML = '<div class="empty">Pesanmu akan muncul di sini.</div>';
+    return;
+  }
+
+  el.innerHTML = db.chats.map(m => `
+    <div class="bubble ${m.side === "right" ? "right" : "left"}">
+      <strong>${esc(m.sender)}</strong><br>
+      ${esc(m.message)}
+      <small>${esc(m.time)}</small>
+    </div>
+  `).join("");
+}
+
+function renderMedia() {
+  const el = document.getElementById("mediaList");
+
+  if (!db.media.length) {
+    el.innerHTML = '<div class="empty">Belum ada media.</div>';
+    return;
+  }
+
+  el.innerHTML = db.media.map(m => {
+    let preview = "";
+
+    if (m.type.startsWith("image/")) {
+      preview = `<img class="cover" src="${m.src}" alt="${esc(m.name)}">`;
+    } else if (m.type.startsWith("audio/")) {
+      preview = `<audio controls style="width:100%" src="${m.src}"></audio>`;
+    } else if (m.type.startsWith("video/")) {
+      preview = `<video controls style="width:100%;max-height:300px" src="${m.src}"></video>`;
+    }
+
+    return `
+      <div class="item" style="margin-bottom:10px">
+        <h3>${esc(m.name)}</h3>
+        ${preview}
+        <p class="muted">${esc(m.filename)}</p>
+        <button onclick="deleteItem('media','${m.id}')">Hapus Media</button>
+      </div>
+    `;
+  }).join("");
+}
+
+function renderReader() {
+  const select = document.getElementById("readerAU");
+  const previous = select.value;
+
+  select.innerHTML = db.aus.map(a =>
+    `<option value="${a.id}">${esc(a.title)}</option>`
+  ).join("");
+
+  if (!db.aus.length) {
+    select.innerHTML = '<option value="">Belum ada AU</option>';
+    document.getElementById("readerContent").innerHTML =
+      '<div class="empty">Buat AU terlebih dahulu.</div>';
+    return;
+  }
+
+  if (db.aus.some(a => a.id === previous)) {
+    select.value = previous;
+  }
+
+  const au = db.aus.find(a => a.id === select.value) || db.aus[0];
+
+  document.getElementById("readerContent").innerHTML = `
+    ${au.cover ? `<img class="cover" src="${au.cover}" alt="Sampul AU">` : ""}
+    <h2>${esc(au.title)}</h2>
+    <span class="badge">${esc(au.genre)}</span>
+    <p>Penulis: ${esc(au.author || "Anonim")}</p>
+    <div class="story-text">${esc(au.synopsis || "Belum ada sinopsis.")}</div>
+    <hr>
+    <h3>Dunia Cerita</h3>
+    <div class="story-text">${esc(au.world || "Belum ada catatan dunia cerita.")}</div>
+    <hr>
+    <h3>Bab Novel</h3>
+    ${db.chapters.length ? db.chapters.map((c, i) => `
+      <button class="choice-button" onclick="readChapter('${c.id}')">
+        📖 Bab ${i + 1}: ${esc(c.title)}
+      </button>
+    `).join("") : '<p>Belum ada bab.</p>'}
+  `;
+}
+
+function renderLibrary() {
+  const el = document.getElementById("libraryList");
+
+  if (!db.aus.length) {
+    el.innerHTML = '<div class="empty">Belum ada AU. Buat AU pertamamu!</div>';
+    return;
+  }
+
+  el.innerHTML = db.aus.map(a => `
+    <div class="item" style="margin-bottom:12px">
+      ${a.cover ? `<img class="cover" src="${a.cover}" alt="Sampul AU">` : ""}
+      <h3>${esc(a.title)}</h3>
+      <span class="badge">${esc(a.genre)}</span>
+      <p>${esc(a.synopsis || "Belum ada sinopsis.")}</p>
+      <div class="actions">
+        <button onclick="openAU('${a.id}')">Buka di Reader</button>
+        <button onclick="deleteItem('aus','${a.id}')">Hapus AU</button>
+      </div>
+    </div>
+  `).join("");
+}
+
+function openAU(auId) {
+  showPage("reader");
+  document.getElementById("readerAU").value = auId;
+  renderReader();
+}
+
+function exportProject() {
+  const json = JSON.stringify(db, null, 2);
+  downloadFile("eclipse-au-project.json", json, "application/json");
+}
+
+function importProject() {
+  const input = document.getElementById("importFile");
+  const file = input.files[0];
+
+  if (!file) {
+    alert("Pilih file JSON terlebih dahulu.");
+    return;
+  }
+
+  const reader = new FileReader();
+
+  reader.onload = () => {
+    try {
+      const imported = JSON.parse(reader.result);
+
+      if (!imported || typeof imported !== "object" ||
+          !Array.isArray(imported.aus) ||
+          !Array.isArray(imported.characters) ||
+          !Array.isArray(imported.chapters)) {
+        throw new Error("Format proyek tidak sesuai.");
+      }
+
+      if (!confirm("Impor proyek akan mengganti data yang ada. Ekspor cadangan terlebih dahulu jika diperlukan. Lanjutkan?")) {
+        return;
+      }
+
+      db = { ...emptyDB(), ...imported };
+
+      if (persist()) {
+        alert("Proyek berhasil diimpor.");
+        input.value = "";
+      }
+    } catch (e) {
+      alert("File JSON tidak valid atau bukan proyek ECLIPSE AU.");
+    }
+  };
+
+  reader.readAsText(file);
+}
+
+updateViews();
+</script>
+
+</body>
+  </html>
